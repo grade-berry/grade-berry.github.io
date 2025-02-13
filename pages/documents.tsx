@@ -90,11 +90,8 @@ export default function Documents({ client,createError }: DocumentsProps) {
 
 	useEffect(() => {
 		try {
-			//console.log("DEATTHHHHH FUCK")
-			console.log(documents)
 			if(client.loadedDocuments==undefined){
 			client.documents().then(([res]) => {
-				console.log(res);
 				res.forEach((doc) => {
 					doc.file.comment = parseName(doc.file.comment);
 					doc.file.type = parseName(doc.file.type);
@@ -108,7 +105,6 @@ export default function Documents({ client,createError }: DocumentsProps) {
 			}
 		} catch {
 			if (localStorage.getItem("remember") === "false") {
-				console.log("womp womp")
 			}
 		}
 	}, [client]);
@@ -159,7 +155,6 @@ export default function Documents({ client,createError }: DocumentsProps) {
 											<a
 												onClick={async () => {
 													let download = await document.get();
-													console.log(download);
 													openBase64NewTab(download[0].base64);
 												}}
 												href="#"

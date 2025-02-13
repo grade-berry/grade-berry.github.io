@@ -6,7 +6,6 @@ import { Flowbite, Toast, useTheme } from "flowbite-react";
 import Topbar from "../components/TopBar";
 import SideBar from "../components/SideBar";
 import MobileBar from "../components/MobileBar";
-import CustomAd from "../components/customAd";
 
 import { Grades,parseGrades } from "../utils/grades";
 import Head from "next/head";
@@ -23,7 +22,7 @@ interface Toast {
 	type: "success" | "error" | "warning" | "info";
 }
 
-const noShowNav = ["/login", "/", "/privacy", "/letter","/faq"];
+const noShowNav = ["/login", "/","/faq"];
 
 function MyApp({ Component, pageProps }) {
 	const router = useRouter();
@@ -36,10 +35,7 @@ function MyApp({ Component, pageProps }) {
 	const [grades, setGrades] = useState<Grades>();
 	const [period, setPeriod] = useState<number>();
 	const [loading, setLoading] = useState(false);
-	const [referal,setReferal]=useState(false);
 	const [districts, setDistricts] = useState(allDistricts);
-	const [timestamp,setTime]=useState(0);
-    const [ad,setAd]=useState(undefined);
 	const { width } = useWindowSize();
 	const isMediumOrLarger = width >= 768;
 
@@ -61,11 +57,7 @@ function MyApp({ Component, pageProps }) {
 				const fetchedClient=res[0];
 				//@ts-ignore
 				gradebook.gradingScale=res[2].gradingScale
-				//@ts-ignore
-				Cookies.set("token",res[2].token,{expires:5/(60*24)})
-				console.log("para me?")
-				console.log(fetchedClient);
-				await setClient(fetchedClient);
+				setClient(fetchedClient);
 				
 				districts.forEach(district=>{
 					if(district.parentVueUrl==districtURL){Cookies.set("districtURL",JSON.stringify(district),{expires:7})}
@@ -106,76 +98,27 @@ function MyApp({ Component, pageProps }) {
 		return false;
 	};
 
-	useEffect(() => {
-		const urlParams = new URLSearchParams(window.location.search);
-		const referrer = urlParams.get('ref')
-		if (referrer === 'klinn') {
-			setReferal(true);
-	}
-	  }, []);
+	
 
-
-	useEffect(()=>{
-		//replace when the updated logic from adsplatform is finished
-		if(client && referal){
-			try{
-				fetch("https://studentvuelib.up.railway.app/refferals",{
-				  'method':'POST',
-				  'headers': { 'Content-Type': 'application/json' },
-				  'body': JSON.stringify({'validation':'f7c3c1ce7613fce0b595a3eaf48f1ad8'})
-	  
-				})
-			  }catch(error){console.log("idk")}
-		}
-
-
-	},[client])
-
-	useEffect(()=>{
-		if(client!==undefined&&studentInfo==undefined){
-			client.studentInfo().then(([info])=>{
-				setStudentInfo(info)
-				fetch("https://studentvuelib.up.railway.app" + "/logLogin", {
-					'method': 'POST',
-					'headers': { 'Content-Type': 'application/json' },
-					'body': JSON.stringify({ 'username': client.username,'schoolName':info.currentSchool})
-				})
-			}).catch(error=>{client.ChildList().then(([info])=>{
-				setStudentInfo(info);
-				fetch("https://studentvuelib.up.railway.app" + "/logLogin", {
-					'method': 'POST',
-					'headers': { 'Content-Type': 'application/json' },
-					'body': JSON.stringify({ 'username': client.username,'schoolName':info.currentSchool})
-				})
-
-			}).catch()
-		
-		})
-		}
-	},[client])
 
 	useEffect(() => {
 		var refURL: string="";
 		async function doLogin(){
 			await login(Cookies.get("username"),Cookies.get("password"),true,districtURL,true)}
 		if(Cookies.get("districtURL")!=undefined&&districtURL==undefined){
-			console.log("RELEASE ME")
 			let cookieDistrict=JSON.parse(Cookies.get("districtURL"));
-			console.log(cookieDistrict);
 			if(districts.findIndex(district=>district.parentVueUrl==cookieDistrict.parentVueUrl)==-1){let temp=districts;temp.push(cookieDistrict);setDistricts(temp)}
 			setDistrictURL(cookieDistrict.parentVueUrl);
-			console.log(districtURL)
 			refURL=cookieDistrict.parentVueUrl;
 
 		}else{if(districtURL==undefined){setDistrictURL("https://md-mcps-psv.edupoint.com")}}
 		if(client===undefined&&Cookies.get("username")!=undefined&&Cookies.get("password")!=undefined&&districtURL!==undefined){
 			doLogin();
 			
-		}else{if(client===undefined&&(!noShowNav.includes(router.pathname)||router.pathname=="/")&&!refURL){console.log("SHIT FUCK");router.push("/login")}}
+		}else{if(client===undefined&&(!noShowNav.includes(router.pathname)||router.pathname=="/")&&!refURL){router.push("/login")}}
 	}, [client,districtURL]);
 
 	function createError(message:string){
-		console.log("Verbose Error: ",message)
 		console.log("Verbose Error: ",message)
 		const preSets={"upgraded":"API Token Expired, come back soon?","incorrect":"Username or Password is Incorrect","invalid":"Username or Password is Incorrect","load failed":"Network Error","failed to fetch":"Network Error:Try Again Later","socket":"Network Error"};
 		for(let key in preSets){
@@ -201,36 +144,12 @@ const logout = async () => {
 
 };
 
-	// useEffect(() => {
-	// 	let username = localStorage.getItem("username");
-	// 	let password = localStorage.getItem("password");
-	// 	let remember = localStorage.getItem("remember");
-	// 	let storedDistrictURL = localStorage.getItem("districtURL");
-	// 	storedDistrictURL && setDistrictURL(storedDistrictURL);
-	// 	if (remember === "true" && username && password && storedDistrictURL) {
-	// 		login(username, password, true, districtURL);
-	// 	}
-	// }, []);
 
 	return (
 		<Flowbite>
 			<Analytics/>
 			<Head>
 				<title>Grade Melon</title>
-
-				<meta name="monetag" content="60496f145aa140bed68b191bae702c75"></meta>
-         <script async src="https://www.googletagmanager.com/gtag/js?id=G-3YWWBKH03T"></script>
-
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-3YWWBKH03T');
-              `,
-            }}
-          />
 			</Head>
 			<div className="fixed p-5 z-[60]">
 				{toasts.map(({ title, type }, i) => (
@@ -275,10 +194,6 @@ const logout = async () => {
 								districts={districts}
 								setDistricts={setDistricts}
 								isMediumOrLarger={isMediumOrLarger}
-								timestamp={timestamp}
-								setTime={setTime}
-								ad={ad}
-								setAd={setAd}
 
 							/>
 						</AnimateSharedLayout>
@@ -305,10 +220,6 @@ const logout = async () => {
 										districts={districts}
 										setDistricts={setDistricts}
 										isMediumOrLarger={isMediumOrLarger}
-										timestamp={timestamp}
-										setTime={setTime}
-										ad={ad}
-										setAd={setAd}
 										
 									/>
 								</AnimateSharedLayout>
@@ -335,10 +246,6 @@ const logout = async () => {
 										districts={districts}
 										setDistricts={setDistricts}
 										isMediumOrLarger={isMediumOrLarger}
-										timestamp={timestamp}
-										setTime={setTime}
-										ad={ad}
-										setAd={setAd}
 									/>
 								</AnimateSharedLayout>
 								<div className="px-4 fixed bottom-5 w-full">

@@ -11,11 +11,9 @@ import { FiMoon } from "react-icons/fi";
 import { BsGraphUp } from "react-icons/bs";
 import { motion } from "framer-motion";
 
-interface HomeProps {
-	client: any;
-}
 
-export default function Home({ client }: HomeProps) {
+
+export default function Home() {
 	const router = useRouter();
 
 
