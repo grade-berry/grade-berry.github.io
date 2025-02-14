@@ -98,7 +98,17 @@ function MyApp({ Component, pageProps }) {
 		return false;
 	};
 
-	
+	useEffect(()=>{
+		if(client!==undefined&&studentInfo==undefined){
+			client.studentInfo().then(([info])=>{
+				setStudentInfo(info)
+			}).catch(error=>{client.ChildList().then(([info])=>{
+				setStudentInfo(info);
+			}).catch()
+		
+		})
+		}
+	},[client])
 
 
 	useEffect(() => {
