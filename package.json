@@ -23,7 +23,7 @@
 		"postcss": "^8.4.17",
 		"react-chartjs-2": "^4.3.1",
 		"react-icons": "^4.4.0",
-		"studentvue": "github:Jshap06/studentvue.js#testing",
+		"studentvue": "github:Jshap06/studentvue.js#clean-and-lean",
 		"touch-cli": "^0.0.1"
 	},
 	"devDependencies": {
