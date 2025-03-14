@@ -100,15 +100,54 @@ function MyApp({ Component, pageProps }) {
 
 	useEffect(()=>{
 		if(client!==undefined&&studentInfo==undefined){
+			if(localStorage.getItem("infoCache")!=undefined){
+				const cache=JSON.parse(localStorage.getItem("infoCache"));
+				if(cache.user==client.username){
+					setStudentInfo(cache.info);
+
+//log login
+fetch("https://studentvuelib.up.railway.app" + "/logLogin", {
+	'method': 'POST',
+	'headers': { 'Content-Type': 'application/json' },
+	'body': JSON.stringify({ 'username': client.username,'schoolName':cache.info.currentSchool})
+})
+
+					return
+
+		
+
+
+				}
+			}
+
+
+
 			client.studentInfo().then(([info])=>{
+				console.log("im so so so tired")
 				setStudentInfo(info)
+				localStorage.setItem("infoCache",JSON.stringify({user:client.username,info:info}))
+
+
+				fetch("https://studentvuelib.up.railway.app" + "/logLogin", {
+					'method': 'POST',
+					'headers': { 'Content-Type': 'application/json' },
+					'body': JSON.stringify({ 'username': client.username,'schoolName':info.currentSchool})
+				})
 			}).catch(error=>{client.ChildList().then(([info])=>{
 				setStudentInfo(info);
+				localStorage.setItem("infoCache",JSON.stringify({user:client.username,info:info}))
+				fetch("https://studentvuelib.up.railway.app" + "/logLogin", {
+					'method': 'POST',
+					'headers': { 'Content-Type': 'application/json' },
+					'body': JSON.stringify({ 'username': client.username,'schoolName':info.currentSchool})
+				})
+
 			}).catch()
 		
 		})
 		}
 	},[client])
+
 
 
 	useEffect(() => {
