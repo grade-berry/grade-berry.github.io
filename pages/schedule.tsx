@@ -17,7 +17,8 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 	const [today,setToday]=useState<boolean>(true);
 
 	function update(e){
-		if(e=="today"){setToday(true);setTerm("today")}else{
+		console.log(e.target.value)
+		if(e.target.value=="today"){setToday(true);setTerm("today")}else{
 		delete client.loadedSchedule;
 		setToday(false);
 		setTerm(parseInt(e.target.value))
@@ -25,7 +26,7 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 	}
 	useEffect(() => {
 		try {
-			if(!client.loadedSchedule&&term!='today'){
+			if(!client.loadedSchedule&&term!="today"){
 			setLoading(true);
 			client.schedule(term).then(([res]) => {
 				client.loadedSchedule=res;
@@ -53,7 +54,7 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 				<div className="max-w-max">
 					<select
 						id="periods"
-						value={term ? term : "today"}
+						value={today ? "today" : term}
 						onChange={(e) => (update(e))}
 						className="h-11 mb-5 block w-full p-2 text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 					>
@@ -65,7 +66,7 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 						))}
 					</select>
 
-					{(!schedule.concurrent && !today) && <div className="max-w-max overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700">
+					{(!schedule.conClasses && !today) && <div className="max-w-max overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700">
 						<table className="text-sm text-left text-gray-500 dark:text-gray-400">
 							<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 								<tr>
@@ -152,10 +153,15 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 									</tr>
 								))}
 								<tr>
-									<td colSpan={4}><ul></ul></td>
+									<td className={`bg-${
+											schedule.mainClasses.length % 2 == 0 ? "white" : "gray-50"
+										} border-b dark:bg-gray-${
+											schedule.mainClasses.length % 2 == 0 ? 900 : 800
+										} dark:border-gray-700 font-bold pl-3 text-lg `}
+										key={schedule.mainClasses.length} colSpan={4}>{schedule.conClasses.conName}:</td>
 								</tr>
 								{schedule.conClasses.map(({ period, name, room, teacher }, i) => {
-									i=i+schedule.mainClasses.length-1;
+									i=i+schedule.mainClasses.length+1;
 									return(
 									<tr
 										className={`bg-${
@@ -183,8 +189,8 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 						</table>
 					</div>}
 
-		{today && <div className="max-w-max overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700">
-						<table className="text-sm text-left text-gray-500 dark:text-gray-400">
+		{today && <div className="flex-col space-y-4 max-w-max overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700">
+						<table className="flex-1 text-sm text-left text-gray-500 dark:text-gray-400">
 							<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 								<tr>
 									<th scope="col" className='py-3 px-6'>
@@ -216,7 +222,7 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 									>
 										<th
 											scope="row"
-											className="py-4 px-6 font-medium text-gray-900 dark:text-white"
+											className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
 										>
 											{start+" - "+end}
 										</th>
@@ -228,11 +234,31 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 										</td>
 									</tr>
 								))}
-								{schedule.today.con && (
-									<tr><td colSpan={5}><hr/></td></tr>
-								)}
+								</tbody>
+								</table>
 								{schedule.today.con &&( 
-								schedule.today.con.map(({ start,end,period, name, room, teacher }, i) => {
+									<table className="text-sm text-left text-gray-500 dark:text-gray-400">
+									<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+										<tr>
+											<th scope="col" className='py-3 px-6'>
+												Time
+											</th>
+											<th scope="col" className="py-3 px-6">
+												Period
+											</th>
+											<th scope="col" className="py-3 px-6">
+												Course Name
+											</th>
+											<th scope="col" className="py-3 px-6">
+												Room
+											</th>
+											<th scope="col" className="py-3 px-6">
+												Teacher
+											</th>
+										</tr>
+									</thead>
+									<tbody>
+								{schedule.today.con.map(({ start,end,period, name, room, teacher }, i) => {
 									i=i+schedule.today.main.length;
 									return(
 									<tr
@@ -245,7 +271,7 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 									>
 										<th
 											scope="row"
-											className="py-4 pl-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+											className="py-4 pl-6 font-medium text-gray-900 dark:text-white"
 										>
 										{start+" - "+end}
 										</th>
@@ -256,14 +282,20 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 											{teacher}
 										</td>
 									</tr>
-								)}))}
+								
+
 									
+								)})}
+								
+								</tbody>
+								</table>
+									
+								)}
 
 
 
 
-							</tbody>
-						</table>
+						
 					</div>}
 
 				</div>
