@@ -189,7 +189,7 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 						</table>
 					</div>}
 
-		{today && <div className="flex-col space-y-4 max-w-max overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700">
+		{today && <div className="flex flex-col space-y-4 items-stretch"><div className="max-w-max overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700">
 						<table className="flex-1 text-sm text-left text-gray-500 dark:text-gray-400">
 							<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 								<tr>
@@ -236,7 +236,9 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 								))}
 								</tbody>
 								</table>
+								</div>
 								{schedule.today.con &&( 
+									<div className="max-w-max overflow-x-auto shadow-md rounded-lg border border-gray-200 dark:border-gray-700">
 									<table className="text-sm text-left text-gray-500 dark:text-gray-400">
 									<thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
 										<tr>
@@ -289,6 +291,7 @@ export default function Schedule({ client,createError }: ScheduleProps) {
 								
 								</tbody>
 								</table>
+								</div>
 									
 								)}
 
