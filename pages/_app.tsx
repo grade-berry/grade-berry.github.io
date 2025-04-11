@@ -58,8 +58,15 @@ function MyApp({ Component, pageProps }) {
 			encrypted:encrypted ||false
 		},"https://studentvuelib.up.railway.app")
 			.then(async (res) => {
-				const gradebook=res[1];
+				const gradebookResponses=res[1];
+
+				const mainGrades=gradebookResponses.
 				const fetchedClient=res[0];
+				const info=res[2]
+				if(info){
+				setStudentInfo(info)}
+
+
 				//@ts-ignore
 				gradebook.gradingScale=res[2].gradingScale
 				//@ts-ignore
