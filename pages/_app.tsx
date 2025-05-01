@@ -58,19 +58,18 @@ function MyApp({ Component, pageProps }) {
 			encrypted:encrypted ||false
 		},"https://studentvuelib.up.railway.app")
 			.then(async (res) => {
-				const gradebookResponses=res[1];
-
-				const mainGrades=gradebookResponses.
+				console.log("man wtf", res)
+				const gradebooks=res[1]
+				const [mainGrades]=gradebooks.main.response
+				mainGrades.gradingScale=res[1].main.response[1].gradingScale
 				const fetchedClient=res[0];
-				const info=res[2]
+				const [info]=res[2]
 				if(info){
 				setStudentInfo(info)}
 
 
-				//@ts-ignore
-				gradebook.gradingScale=res[2].gradingScale
-				//@ts-ignore
-				Cookies.set("token",res[2].token,{expires:5/(60*24)})
+		
+				Cookies.set("token",res[1].main.response[1].token,{expires:5/(60*24)})
 				console.log("para me?")
 				console.log(fetchedClient);
 				await setClient(fetchedClient);
@@ -97,7 +96,7 @@ function MyApp({ Component, pageProps }) {
 					Cookies.remove("password");
 					Cookies.remove("districtURL");
 				}
-				const parsedGrades=parseGrades(gradebook);
+				const parsedGrades=parseGrades(mainGrades);
 				await setGrades(parsedGrades);
 				await setPeriod(parsedGrades.period.index);
 				if(router.pathname=="/"||router.pathname=="/login"){router.push("/grades")}
