@@ -244,7 +244,7 @@ export default function Grades({
 							<p className="font-bold text-black dark:text-white">Grade</p>
 							<p
 							style={{color:course?.assignments[modalDetails]?.grade.color.includes('#') && course?.assignments[modalDetails]?.grade.color}}
-								className={`text-base leading-relaxed` +  `text-${course?.assignments[modalDetails]?.grade.color}-400`}
+								className={`text-base leading-relaxed` +  ` text-${course?.assignments[modalDetails]?.grade.color}-400`}
 							>
 								{course?.assignments[modalDetails]?.grade.letter}
 								{!isNaN(course?.assignments[modalDetails]?.grade.raw) &&
