@@ -226,7 +226,7 @@ const parseDate = ({ start, end }: { start: Date; end: Date }): string => {
 		(new Date().getTime() - endDate.getTime()) / 86400000
 	);
 
-	if (daysLeft > 0 && daysToStart < 0) {
+	if (daysLeft > 0 && daysToStart <= 0) {
 		return `ends in ${daysLeft} day${daysLeft > 1 ? "s" : ""}`;
 	} else if (daysToStart > 0) {
 		return `starts in ${daysToStart} day${daysToStart > 1 ? "s" : ""}`;
