@@ -224,7 +224,7 @@ export default function Grades({
 		let results = genTable(course, optimizeProps.desiredGrade, points);
 		setSolution(results);
 	};
-
+//hereWeGo
 	return (
 		<motion.div className="p-5 md:p-10 flex-1">
 			<Head>
