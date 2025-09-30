@@ -119,9 +119,9 @@ async function saveNew(){
     if(validate()){
         
         const newScale = {
-  rounding: undefined,
-  letterScale: [...letterScale].sort((a, b) => a[1][1] - b[1][1]).reverse()
+...grades.gradingScales[course.name+course.period+course.teacher.name],  letterScale: [...letterScale].sort((a, b) => a[1][1] - b[1][1]).reverse()
 };
+        if(!newScale.rounding){newScale.rounding==undefined}
         const augmentedGrades=structuredClone(grades)
         augmentedGrades.gradingScales[course.name+course.period+course.teacher.name]=newScale
 
