@@ -87,9 +87,9 @@ export default function Home({ client }: HomeProps) {
 						transition={{ delay: 0.2, duration: 0.5 }}
 						className="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400"
 					>
-						Tired of using StudentVue? Grade Melon is an all new third party student vue alternative
+						Grade Melon is an all new third alternative
 						to help you stay in control of your grades. It allows any student
-						using Synergy StudentVue to login to check their schedule and
+						to login to check their schedule and
 						calculate their grades.
 					</motion.p>
 
