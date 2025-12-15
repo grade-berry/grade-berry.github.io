@@ -247,6 +247,7 @@ const parseAssignmentName = (name: string): string => {
 
 const parseGrades = (grades: Gradebook): Grades => {
 	const gradingScale=grades.gradingScale;
+ delete gradingScale.mode;
 	for (let i = 0; i < grades.courses.length; i++) {
 		if (grades.courses[i].marks.length === 0) {
 			grades.courses[i].marks = [
